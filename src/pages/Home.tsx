@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useCart } from '../context/CartContext';
 import type { Product } from '../types/Product';
 
 async function fetchProducts(): Promise<Product[]> {
@@ -14,6 +16,7 @@ export default function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const itemsPerPage = 8;
+    const { addToCart } = useCart();
 
     const { data: products, isLoading, error } = useQuery<Product[]>({
         queryKey: ['products'],
@@ -140,6 +143,20 @@ export default function Home() {
                                             </svg>
                                             {product.rating.rate}
                                         </div>
+                                    </div>
+                                    <div className="mt-4 grid grid-cols-2 gap-2 pt-2 border-t border-gray-50">
+                                        <button
+                                            onClick={() => addToCart(product)}
+                                            className="bg-[#003366] hover:bg-[#002244] text-white py-2 px-1 text-[11px] font-bold rounded transition-colors text-center cursor-pointer"
+                                        >
+                                            Add to Cart
+                                        </button>
+                                        <Link
+                                            to={`/product/${product.id}`}
+                                            className="border border-[#003366] text-[#003366] hover:bg-blue-50 py-2 px-1 text-[11px] font-bold rounded transition-colors text-center cursor-pointer"
+                                        >
+                                            View Details
+                                        </Link>
                                     </div>
                                 </div>
                             ))}
